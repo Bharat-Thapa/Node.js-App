@@ -1,7 +1,8 @@
-version: '3.9'
+version: '3.8'
 
 services:
-  web:
-    image: "trainwithshubham/node-app-batch-6:latest"
+  app:
+    image: thapabharat/nodejs-app:latest
+    container_name: node_app
     ports:
       - "8000:8000"
