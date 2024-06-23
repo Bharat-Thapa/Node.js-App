@@ -44,7 +44,7 @@ pipeline {
 
         stage('Build and Test') {
             steps {
-                    sh "docker build -t reddit-clone-app ."
+                    sh "docker build -t node.js-app ."
                     echo "code built and tested successfully"
             }
         }
@@ -53,9 +53,9 @@ pipeline {
             steps {
                 echo "Pushing the image to docker hub"
                 withCredentials([usernamePassword(credentialsId:"dockerHub",passwordVariable:"dockerHubPass",usernameVariable:"dockerHubUser")]){
-                sh "docker tag reddit-clone-app ${env.dockerHubUser}/reddit-clone-app:latest"
+                sh "docker tag node.js-app ${env.dockerHubUser}/node.js-app:latest"
                 sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPass}"
-                sh "docker push ${env.dockerHubUser}/reddit-clone-app:latest"
+                sh "docker push ${env.dockerHubUser}/node.js-app:latest"
                 }
             }
         }
@@ -63,7 +63,7 @@ pipeline {
        stage('Deploy') {
     steps {
         withCredentials([file(credentialsId: KUBECONFIG_CREDENTIALS_ID, variable: 'KUBECONFIG')]) {
-            sh 'helm upgrade --install reddit-clone-app ./helm-chart --set image.repository=${env.dockerHubUser}/reddit-clone-app --set image.tag=latest --kubeconfig $KUBECONFIG'
+            sh 'helm upgrade --install node.js-app ./helm-chart --set image.repository=${env.dockerHubUser}/node.js-app --set image.tag=latest --kubeconfig $KUBECONFIG'
         }
     }
 }
